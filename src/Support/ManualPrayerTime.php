@@ -70,14 +70,22 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
         $date = strtotime($year.'-1-1');
         $endDate = strtotime(($year + 1).'-1-1');
 
-        return $this->calculateGenius(
-            $latitude,
-            $longitude,
-            $timeZone,
-            $cityId,
-            $date,
-            $endDate
-        );
+        return config('prayertime.use_package_geniusts_prayer_times') ?
+            $this->calculateGenius(
+                $latitude,
+                $longitude,
+                $timeZone,
+                $cityId,
+                $date,
+                $endDate
+            ) : $this->calculateManual(
+                $latitude,
+                $longitude,
+                $timeZone,
+                $cityId,
+                $date,
+                $endDate
+            );
     }
 
     protected function calculateManual(int $latitude, int $longitude, int $timeZone, string $cityId, float $date, float $endDate): array
@@ -91,13 +99,18 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
 
         while ($date < $endDate) {
             $times = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
+            $subuh = $this->normalizeTime($times[0]);
+            $imsak = $subuh->clone()->subMinutes(10);
+            $terbit = $this->normalizeTime($times[1]);
+            $dhuhaDiff = $terbit->clone()->diffInMinutes($times->fajr);
+            $dhuha = $terbit->clone()->addMinutes($dhuhaDiff / 3);
             $prayTimes[] = [
                 'city_external_id' => $cityId,
                 'prayer_at' => $this->normalizeDate($date),
-                'imsak' => '00:00',
+                'imsak' => $imsak,
                 'subuh' => $this->normalizeTime($times[0]),
-                'terbit' => $this->normalizeTime($times[1]),
-                'dhuha' => '00:00',
+                'terbit' => $terbit,
+                'dhuha' => $dhuha,
                 'dzuhur' => $this->normalizeTime($times[2]),
                 'ashar' => $this->normalizeTime($times[3]),
                 'maghrib' => $this->normalizeTime($times[5]),

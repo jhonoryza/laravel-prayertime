@@ -32,9 +32,13 @@ class PrayerTimeServiceProvider extends ServiceProvider
                 return new KemenagPrayerTime();
             } elseif ($source == 'myquran.com') {
                 return new MyQuranPrayerTime();
+            } elseif ($source == 'manual calculation') {
+                return new ManualPrayerTime();
             }
 
-            return new ManualPrayerTime();
+            $class = config('prayertime.custom_prayer_time_class');
+
+            return new $class();
         });
     }
 
