@@ -45,7 +45,7 @@ kemenag source is using scraping method to get the data
 
 myquran.com source is using rest api method to get the data
 
-manual calculation source is work in progress
+manual calculation source is using manual calculation method
 
 ## sync data
 

@@ -9,8 +9,9 @@ return [
 
     /**
      * Base URI of prayertime
-     * example: https://bimasislam.kemenag.go.id/
-     * example: https://api.myquran.com/v2/
+     * kemenag: https://bimasislam.kemenag.go.id/
+     * myquran.com: https://api.myquran.com/v2/
+     * manual calculation:
      */
     'base_uri' => ENV('PRAYTIME_BASE_URI', 'https://bimasislam.kemenag.go.id/'),
 ];

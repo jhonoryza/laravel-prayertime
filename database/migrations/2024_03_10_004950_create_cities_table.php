@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('province_external_id')->nullable()->index();
             $table->string('external_id')->index();
             $table->string('name')->index();
+            $table->decimal('latitude', 10, 5)->default(0);
+            $table->decimal('longitude', 10, 5)->default(0);
             $table->index([
                 'province_external_id', 'name',
             ]);

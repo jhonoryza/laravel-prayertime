@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "47bd0c4a7a31f173400962426dcb5392",
+    "content-hash": "4be4d31d802526864235a87eff630899",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -165,6 +165,47 @@
                 }
             ],
             "time": "2024-02-18T20:23:39+00:00"
+        },
+        {
+            "name": "geniusts/prayer-times",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeniusTS/prayer-times.git",
+                "reference": "79fda6eb5e5fa6736f3a3449aa18726111398efc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeniusTS/prayer-times/zipball/79fda6eb5e5fa6736f3a3449aa18726111398efc",
+                "reference": "79fda6eb5e5fa6736f3a3449aa18726111398efc",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^1.22|^2.0.0",
+                "php": ">=7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeniusTS\\PrayerTimes\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abdul-Kader Zein-Eddin",
+                    "email": "aboudeh1987@gmail.com"
+                }
+            ],
+            "description": "A PHP package to calculate prayer times",
+            "support": {
+                "issues": "https://github.com/GeniusTS/prayer-times/issues",
+                "source": "https://github.com/GeniusTS/prayer-times/tree/1.0.5"
+            },
+            "time": "2019-09-04T18:29:42+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

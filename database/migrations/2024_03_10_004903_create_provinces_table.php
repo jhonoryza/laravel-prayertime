@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('external_id')->index();
             $table->string('name')->index();
+            $table->decimal('latitude', 10, 5)->default(0);
+            $table->decimal('longitude', 10, 5)->default(0);
             $table->timestamps();
         });
     }

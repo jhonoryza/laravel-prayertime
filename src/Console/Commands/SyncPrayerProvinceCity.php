@@ -56,8 +56,10 @@ class SyncPrayerProvinceCity extends Command
                     'external_id' => $province['value'],
                 ], [
                     'name' => $province['text'],
+                    'latitude' => $province['latitude'] ?? 0,
+                    'longitude' => $province['longitude'] ?? 0,
                 ]);
-            $this->info('synced ' . $province['text']);
+            $this->info('synced '.$province['text']);
         }
     }
 
@@ -71,7 +73,7 @@ class SyncPrayerProvinceCity extends Command
             try {
                 $cities = $prayerTime->getCities($province->external_id);
             } catch (GuzzleException $e) {
-                $this->warn('skip ' . $province->name);
+                $this->warn('skip '.$province->name);
                 $this->error($e->getMessage());
 
                 continue;
@@ -84,8 +86,10 @@ class SyncPrayerProvinceCity extends Command
                         'external_id' => $city['value'],
                     ], [
                         'name' => $city['text'],
+                        'latitude' => $city['latitude'] ?? 0,
+                        'longitude' => $city['longitude'] ?? 0,
                     ]);
-                $this->info('synced ' . $city['text']);
+                $this->info('synced '.$city['text']);
             }
         }
     }

@@ -7,6 +7,7 @@ use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerProvinceCity;
 use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerTimes;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\KemenagPrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\ManualPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\MyQuranPrayerTime;
 
 class PrayerTimeServiceProvider extends ServiceProvider
@@ -21,24 +22,26 @@ class PrayerTimeServiceProvider extends ServiceProvider
                 SyncPrayerProvinceCity::class,
                 SyncPrayerTimes::class,
             ]);
-            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         }
-        $this->mergeConfigFrom(__DIR__ . '/../config/prayertime.php', 'prayertime');
+        $this->mergeConfigFrom(__DIR__.'/../config/prayertime.php', 'prayertime');
 
         $source = config('prayertime.source');
-        if ($source == 'kemenag') {
-            $this->app->bind(PrayerTime::class, KemenagPrayerTime::class);
-        } elseif ($source == 'myquran.com') {
-            $this->app->bind(PrayerTime::class, MyQuranPrayerTime::class);
-        } elseif ($source == 'manual calculation') {
-            throw new \Exception('manual calculation not implemented yet');
-        }
+        $this->app->bind(PrayerTime::class, function () use ($source) {
+            if ($source == 'kemenag') {
+                return new KemenagPrayerTime();
+            } elseif ($source == 'myquran.com') {
+                return new MyQuranPrayerTime();
+            }
+
+            return new ManualPrayerTime();
+        });
     }
 
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/prayertime.php' => config_path('prayertime.php'),
+            __DIR__.'/../config/prayertime.php' => config_path('prayertime.php'),
         ], 'prayertime-config');
     }
 }

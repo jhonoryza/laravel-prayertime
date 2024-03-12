@@ -11,6 +11,8 @@ class City extends Model
         'external_id',
         'name',
         'province_external_id',
+        'latitude',
+        'longitude',
     ];
 
     public function province(): BelongsTo

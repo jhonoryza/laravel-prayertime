@@ -10,6 +10,8 @@ class Province extends Model
     protected $fillable = [
         'external_id',
         'name',
+        'latitude',
+        'longitude',
     ];
 
     public function cities(): HasMany
