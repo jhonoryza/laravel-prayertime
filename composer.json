@@ -1,0 +1,34 @@
+{
+    "name": "jhonoryza/laravel-prayertime",
+    "type": "library",
+    "license": "MIT",
+    "version": "0.0.1",
+    "autoload": {
+        "psr-4": {
+            "Jhonoryza\\LaravelPrayertime\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jhonoryza\\LaravelPrayertime\\PrayerTimeServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "fajar sidik priatna",
+            "email": "jardik.oryza@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.2",
+        "symfony/dom-crawler": "^7.0",
+        "illuminate/support": "^10.0",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.14"
+    }
+}
