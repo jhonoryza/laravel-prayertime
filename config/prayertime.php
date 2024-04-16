@@ -22,7 +22,7 @@ return [
      *
      * @see \Jhonoryza\LaravelPrayertime\Support\Concerns\CalculationPrayerTime
      */
-    'use_package_geniusts_prayer_times' => true,
+    'use_package_geniusts_prayer_times' => false,
 
     /**
      * define your custom prayer time class if source is using custom

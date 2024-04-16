@@ -2,8 +2,6 @@
 
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns;
 
-use App\Support\PrayTime;
-
 class CalculationPrayerTime extends PrayTime
 {
     public $kemenag = 8;    // Indonesia - Kemenag
