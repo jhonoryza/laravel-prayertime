@@ -170,14 +170,14 @@ class PrayTime
     public function PrayTime($methodID = 0)
     {
 
-        $this->methodParams[$this->Jafari] = [16, 0, 4, 0, 14];
+        $this->methodParams[$this->Jafari]  = [16, 0, 4, 0, 14];
         $this->methodParams[$this->Karachi] = [18, 1, 0, 0, 18];
-        $this->methodParams[$this->ISNA] = [15, 1, 0, 0, 15];
-        $this->methodParams[$this->MWL] = [18, 1, 0, 0, 17];
-        $this->methodParams[$this->Makkah] = [18.5, 1, 0, 1, 90];
-        $this->methodParams[$this->Egypt] = [19.5, 1, 0, 0, 17.5];
-        $this->methodParams[$this->Tehran] = [17.7, 0, 4.5, 0, 14];
-        $this->methodParams[$this->Custom] = [18, 1, 0, 0, 17];
+        $this->methodParams[$this->ISNA]    = [15, 1, 0, 0, 15];
+        $this->methodParams[$this->MWL]     = [18, 1, 0, 0, 17];
+        $this->methodParams[$this->Makkah]  = [18.5, 1, 0, 1, 90];
+        $this->methodParams[$this->Egypt]   = [19.5, 1, 0, 0, 17.5];
+        $this->methodParams[$this->Tehran]  = [17.7, 0, 4.5, 0, 14];
+        $this->methodParams[$this->Custom]  = [18, 1, 0, 0, 17];
 
         $this->setCalcMethod($methodID);
     }
@@ -192,10 +192,10 @@ class PrayTime
     // return prayer times for a given date
     public function getDatePrayerTimes($year, $month, $day, $latitude, $longitude, $timeZone)
     {
-        $this->lat = $latitude;
-        $this->lng = $longitude;
+        $this->lat      = $latitude;
+        $this->lng      = $longitude;
         $this->timeZone = $timeZone;
-        $this->JDate = $this->julianDate($year, $month, $day) - $longitude / (15 * 24);
+        $this->JDate    = $this->julianDate($year, $month, $day) - $longitude / (15 * 24);
 
         return $this->computeDayTimes();
     }
@@ -291,11 +291,11 @@ class PrayTime
         if (is_nan($time)) {
             return $this->InvalidTime;
         }
-        $time = $this->fixhour($time + 0.5 / 60);  // add 0.5 minutes to round
-        $hours = floor($time);
+        $time    = $this->fixhour($time + 0.5 / 60);  // add 0.5 minutes to round
+        $hours   = floor($time);
         $minutes = floor(($time - $hours) * 60);
 
-        return $this->twoDigitsFormat($hours).':'.$this->twoDigitsFormat($minutes);
+        return $this->twoDigitsFormat($hours) . ':' . $this->twoDigitsFormat($minutes);
     }
 
     // convert float hours to 12h format
@@ -304,13 +304,13 @@ class PrayTime
         if (is_nan($time)) {
             return $this->InvalidTime;
         }
-        $time = $this->fixhour($time + 0.5 / 60);  // add 0.5 minutes to round
-        $hours = floor($time);
+        $time    = $this->fixhour($time + 0.5 / 60);  // add 0.5 minutes to round
+        $hours   = floor($time);
         $minutes = floor(($time - $hours) * 60);
-        $suffix = $hours >= 12 ? ' pm' : ' am';
-        $hours = ($hours + 12 - 1) % 12 + 1;
+        $suffix  = $hours >= 12 ? ' pm' : ' am';
+        $hours   = ($hours + 12 - 1) % 12 + 1;
 
-        return $hours.':'.$this->twoDigitsFormat($minutes).($noSuffix ? '' : $suffix);
+        return $hours . ':' . $this->twoDigitsFormat($minutes) . ($noSuffix ? '' : $suffix);
     }
 
     // convert float hours to 12h format with no suffix
@@ -333,12 +333,12 @@ class PrayTime
         $q = $this->fixangle(280.459 + 0.98564736 * $D);
         $L = $this->fixangle($q + 1.915 * $this->dsin($g) + 0.020 * $this->dsin(2 * $g));
 
-        $R = 1.00014 - 0.01671 * $this->dcos($g) - 0.00014 * $this->dcos(2 * $g);
-        $e = 23.439 - 0.00000036 * $D;
+        $R = 1.00014 - 0.01671   * $this->dcos($g) - 0.00014 * $this->dcos(2 * $g);
+        $e = 23.439  - 0.00000036 * $D;
 
-        $d = $this->darcsin($this->dsin($e) * $this->dsin($L));
-        $RA = $this->darctan2($this->dcos($e) * $this->dsin($L), $this->dcos($L)) / 15;
-        $RA = $this->fixhour($RA);
+        $d   = $this->darcsin($this->dsin($e) * $this->dsin($L));
+        $RA  = $this->darctan2($this->dcos($e) * $this->dsin($L), $this->dcos($L)) / 15;
+        $RA  = $this->fixhour($RA);
         $EqT = $q / 15 - $RA;
 
         return [$d, $EqT];
@@ -374,8 +374,7 @@ class PrayTime
     {
         $D = $this->sunDeclination($this->JDate + $t);
         $Z = $this->computeMidDay($t);
-        $V = 1 / 15 * $this->darccos((-$this->dsin($G) - $this->dsin($D) * $this->dsin($this->lat)) /
-                ($this->dcos($D) * $this->dcos($this->lat)));
+        $V = 1 / 15 * $this->darccos((-$this->dsin($G) - $this->dsin($D) * $this->dsin($this->lat)) / ($this->dcos($D) * $this->dcos($this->lat)));
 
         return $Z + ($G > 90 ? -$V : $V);
     }
@@ -396,13 +395,13 @@ class PrayTime
     {
         $t = $this->dayPortion($times);
 
-        $Fajr = $this->computeTime(180 - $this->methodParams[$this->calcMethod][0], $t[0]);
+        $Fajr    = $this->computeTime(180 - $this->methodParams[$this->calcMethod][0], $t[0]);
         $Sunrise = $this->computeTime(180 - 0.833, $t[1]);
-        $Dhuhr = $this->computeMidDay($t[2]);
-        $Asr = $this->computeAsr(1 + $this->asrJuristic, $t[3]);
-        $Sunset = $this->computeTime(0.833, $t[4]);
+        $Dhuhr   = $this->computeMidDay($t[2]);
+        $Asr     = $this->computeAsr(1 + $this->asrJuristic, $t[3]);
+        $Sunset  = $this->computeTime(0.833, $t[4]);
         $Maghrib = $this->computeTime($this->methodParams[$this->calcMethod][2], $t[5]);
-        $Isha = $this->computeTime($this->methodParams[$this->calcMethod][4], $t[6]);
+        $Isha    = $this->computeTime($this->methodParams[$this->calcMethod][4], $t[6]);
 
         return [$Fajr, $Sunrise, $Dhuhr, $Asr, $Sunset, $Maghrib, $Isha];
     }
@@ -474,14 +473,14 @@ class PrayTime
 
         // Adjust Isha
         $IshaAngle = ($this->methodParams[$this->calcMethod][3] == 0) ? $this->methodParams[$this->calcMethod][4] : 18;
-        $IshaDiff = $this->nightPortion($IshaAngle) * $nightTime;
+        $IshaDiff  = $this->nightPortion($IshaAngle) * $nightTime;
         if (is_nan($times[6]) || $this->timeDiff($times[4], $times[6]) > $IshaDiff) {
             $times[6] = $times[4] + $IshaDiff;
         }
 
         // Adjust Maghrib
         $MaghribAngle = ($this->methodParams[$this->calcMethod][1] == 0) ? $this->methodParams[$this->calcMethod][2] : 4;
-        $MaghribDiff = $this->nightPortion($MaghribAngle) * $nightTime;
+        $MaghribDiff  = $this->nightPortion($MaghribAngle) * $nightTime;
         if (is_nan($times[5]) || $this->timeDiff($times[4], $times[5]) > $MaghribDiff) {
             $times[5] = $times[4] + $MaghribDiff;
         }
@@ -524,7 +523,7 @@ class PrayTime
     // add a leading 0 if necessary
     public function twoDigitsFormat($num)
     {
-        return ($num < 10) ? '0'.$num : $num;
+        return ($num < 10) ? '0' . $num : $num;
     }
 
     //---------------------- Julian Date Functions -----------------------
@@ -548,9 +547,9 @@ class PrayTime
     public function calcJD($year, $month, $day)
     {
         $J1970 = 2440588.0;
-        $date = $year.'-'.$month.'-'.$day;
-        $ms = strtotime($date);   // # of milliseconds since midnight Jan 1, 1970
-        $days = floor($ms / (1000 * 60 * 60 * 24));
+        $date  = $year . '-' . $month . '-' . $day;
+        $ms    = strtotime($date);   // # of milliseconds since midnight Jan 1, 1970
+        $days  = floor($ms / (1000 * 60 * 60 * 24));
 
         return $J1970 + $days - 0.5;
     }

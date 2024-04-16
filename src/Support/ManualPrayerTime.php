@@ -18,15 +18,15 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
 
     public function getProvinces(): array
     {
-        $json = file_get_contents(__DIR__.'/../../public/json/manual-calc/provinces.json');
+        $json  = file_get_contents(__DIR__ . '/../../public/json/manual-calc/provinces.json');
         $items = json_decode($json, true);
 
         $provinces = [];
         foreach ($items as $item) {
             $provinces[] = [
-                'value' => $item['id'],
-                'text' => $item['name'],
-                'latitude' => $item['latitude'],
+                'value'     => $item['id'],
+                'text'      => $item['name'],
+                'latitude'  => $item['latitude'],
                 'longitude' => $item['longitude'],
             ];
         }
@@ -36,7 +36,7 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
 
     public function getCities(string $provinceId): array
     {
-        $json = file_get_contents(__DIR__.'/../../public/json/manual-calc/cities.json');
+        $json  = file_get_contents(__DIR__ . '/../../public/json/manual-calc/cities.json');
         $items = json_decode($json, true);
 
         $cities = [];
@@ -44,9 +44,9 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
             return $item['province_id'] === $provinceId;
         })->each(function ($item) use (&$cities) {
             $cities[] = [
-                'value' => $item['id'],
-                'text' => $item['name'],
-                'latitude' => $item['latitude'],
+                'value'     => $item['id'],
+                'text'      => $item['name'],
+                'latitude'  => $item['latitude'],
                 'longitude' => $item['longitude'],
             ];
         });
@@ -63,12 +63,12 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
         if (! $city instanceof City) {
             return [];
         }
-        $latitude = $city->latitude;
+        $latitude  = $city->latitude;
         $longitude = $city->longitude;
-        $timeZone = $this->getTimezone($latitude, $longitude);
+        $timeZone  = $this->getTimezone($latitude, $longitude);
 
-        $date = strtotime($year.'-1-1');
-        $endDate = strtotime(($year + 1).'-1-1');
+        $date    = strtotime($year . '-1-1');
+        $endDate = strtotime(($year + 1) . '-1-1');
 
         return config('prayertime.use_package_geniusts_prayer_times') ?
             $this->calculateGenius(
@@ -90,7 +90,7 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
 
     protected function calculateManual(int $latitude, int $longitude, int $timeZone, string $cityId, float $date, float $endDate): array
     {
-        $prayTime = new CalculationPrayerTime();
+        $prayTime = new CalculationPrayerTime;
         $prayTime->setCalcMethod(8);
         $prayTime->setDhuhrMinutes(2);
         $prayTime->setMaghribMinutes(2);
@@ -98,23 +98,23 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
         $prayTimes = [];
 
         while ($date < $endDate) {
-            $times = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
-            $subuh = $this->normalizeTime($times[0]);
-            $imsak = $subuh->clone()->subMinutes(10);
-            $terbit = $this->normalizeTime($times[1]);
-            $dhuhaDiff = $terbit->clone()->diffInMinutes($times->fajr);
-            $dhuha = $terbit->clone()->addMinutes($dhuhaDiff / 3);
+            $times       = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
+            $subuh       = $this->normalizeTime($times[0]);
+            $imsak       = $subuh->clone()->subMinutes(10);
+            $terbit      = $this->normalizeTime($times[1]);
+            $dhuhaDiff   = $terbit->clone()->diffInMinutes($times->fajr);
+            $dhuha       = $terbit->clone()->addMinutes($dhuhaDiff / 3);
             $prayTimes[] = [
                 'city_external_id' => $cityId,
-                'prayer_at' => $this->normalizeDate($date),
-                'imsak' => $imsak,
-                'subuh' => $this->normalizeTime($times[0]),
-                'terbit' => $terbit,
-                'dhuha' => $dhuha,
-                'dzuhur' => $this->normalizeTime($times[2]),
-                'ashar' => $this->normalizeTime($times[3]),
-                'maghrib' => $this->normalizeTime($times[5]),
-                'isya' => $this->normalizeTime($times[6]),
+                'prayer_at'        => $this->normalizeDate($date),
+                'imsak'            => $imsak,
+                'subuh'            => $this->normalizeTime($times[0]),
+                'terbit'           => $terbit,
+                'dhuha'            => $dhuha,
+                'dzuhur'           => $this->normalizeTime($times[2]),
+                'ashar'            => $this->normalizeTime($times[3]),
+                'maghrib'          => $this->normalizeTime($times[5]),
+                'isya'             => $this->normalizeTime($times[6]),
             ];
 
             $date += 24 * 60 * 60;  // next day
@@ -125,7 +125,7 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
 
     protected function calculateGenius(int $latitude, int $longitude, int $timeZone, string $cityId, float $date, float $endDate): array
     {
-        $prayer = new Prayer();
+        $prayer = new Prayer;
         $prayer->setCoordinates($longitude, $latitude);
         $prayer->setMethod('singapore');
         $prayer->setAdjustments(
@@ -137,19 +137,19 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
             $times = $prayer->times($date);
             $times->setTimeZone($timeZone);
 
-            $dhuhaDiff = $times->sunrise->clone()->diffInMinutes($times->fajr);
-            $dhuha = $times->sunrise->clone()->addMinutes($dhuhaDiff / 3);
+            $dhuhaDiff   = $times->sunrise->clone()->diffInMinutes($times->fajr);
+            $dhuha       = $times->sunrise->clone()->addMinutes($dhuhaDiff / 3);
             $prayTimes[] = [
                 'city_external_id' => $cityId,
-                'prayer_at' => $this->normalizeDate($date),
-                'imsak' => $times->fajr->clone()->subMinutes(10)->format('H:i'),
-                'subuh' => $times->fajr->format('H:i'),
-                'terbit' => $times->sunrise->format('H:i'),
-                'dhuha' => $dhuha,
-                'dzuhur' => $times->duhr->format('H:i'),
-                'ashar' => $times->asr->format('H:i'),
-                'maghrib' => $times->maghrib->format('H:i'),
-                'isya' => $times->isha->format('H:i'),
+                'prayer_at'        => $this->normalizeDate($date),
+                'imsak'            => $times->fajr->clone()->subMinutes(10)->format('H:i'),
+                'subuh'            => $times->fajr->format('H:i'),
+                'terbit'           => $times->sunrise->format('H:i'),
+                'dhuha'            => $dhuha,
+                'dzuhur'           => $times->duhr->format('H:i'),
+                'ashar'            => $times->asr->format('H:i'),
+                'maghrib'          => $times->maghrib->format('H:i'),
+                'isya'             => $times->isha->format('H:i'),
             ];
 
             $date += 24 * 60 * 60;  // next day
@@ -175,23 +175,23 @@ class ManualPrayerTime implements \Jhonoryza\LaravelPrayertime\Support\Concerns\
     {
         $timezone_ids = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, 'ID');
 
-        $time_zone = 0;
+        $time_zone   = 0;
         $tz_distance = 0;
 
         foreach ($timezone_ids as $timezone_id) {
             $timezone = new DateTimeZone($timezone_id);
             $location = $timezone->getLocation();
-            $tz_lat = $location['latitude'];
-            $tz_long = $location['longitude'];
+            $tz_lat   = $location['latitude'];
+            $tz_long  = $location['longitude'];
 
-            $theta = $cur_long - $tz_long;
+            $theta    = $cur_long - $tz_long;
             $distance = (sin(deg2rad($cur_lat)) * sin(deg2rad($tz_lat)))
                 + (cos(deg2rad($cur_lat)) * cos(deg2rad($tz_lat)) * cos(deg2rad($theta)));
             $distance = acos($distance);
             $distance = abs(rad2deg($distance));
 
             if (! $time_zone || $tz_distance > $distance) {
-                $time_zone = $timezone;
+                $time_zone   = $timezone;
                 $tz_distance = $distance;
             }
         }

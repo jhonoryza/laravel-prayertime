@@ -22,30 +22,30 @@ class PrayerTimeServiceProvider extends ServiceProvider
                 SyncPrayerProvinceCity::class,
                 SyncPrayerTimes::class,
             ]);
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
-        $this->mergeConfigFrom(__DIR__.'/../config/prayertime.php', 'prayertime');
+        $this->mergeConfigFrom(__DIR__ . '/../config/prayertime.php', 'prayertime');
 
         $source = config('prayertime.source');
         $this->app->bind(PrayerTime::class, function () use ($source) {
             if ($source == 'kemenag') {
-                return new KemenagPrayerTime();
+                return new KemenagPrayerTime;
             } elseif ($source == 'myquran.com') {
-                return new MyQuranPrayerTime();
+                return new MyQuranPrayerTime;
             } elseif ($source == 'manual calculation') {
-                return new ManualPrayerTime();
+                return new ManualPrayerTime;
             }
 
             $class = config('prayertime.custom_prayer_time_class');
 
-            return new $class();
+            return new $class;
         });
     }
 
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/prayertime.php' => config_path('prayertime.php'),
+            __DIR__ . '/../config/prayertime.php' => config_path('prayertime.php'),
         ], 'prayertime-config');
     }
 }
