@@ -30,6 +30,7 @@
         "geniusts/prayer-times": "^1.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.14"
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^8.18"
     }
 }
