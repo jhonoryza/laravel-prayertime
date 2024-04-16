@@ -5,7 +5,7 @@ return [
      * Source of prayertime.
      * options: 'kemenag', 'myquran.com', 'manual calculation', 'custom'
      */
-    'source' => ENV('PRAYERTIME_SOURCE', 'kemenag'),
+    'source' => ENV('PRAYERTIME_SOURCE', 'manual calculation'),
 
     /**
      * Base URI of prayertime
@@ -14,7 +14,7 @@ return [
      * manual calculation:
      * custom:
      */
-    'base_uri' => ENV('PRAYTIME_BASE_URI', 'https://bimasislam.kemenag.go.id/'),
+    'base_uri' => ENV('PRAYTIME_BASE_URI'),
 
     /**
      * when using source 'manual calculation' you can choose to use
