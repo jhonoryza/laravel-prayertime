@@ -2,7 +2,7 @@
     "name": "jhonoryza/laravel-prayertime",
     "type": "library",
     "license": "MIT",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "autoload": {
         "psr-4": {
             "Jhonoryza\\LaravelPrayertime\\": "src/"
