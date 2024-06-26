@@ -2,73 +2,16 @@
 
 namespace Jhonoryza\LaravelPrayertime\Support;
 
-use Carbon\Carbon;
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\GuzzleException;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
-use Symfony\Component\DomCrawler\Crawler;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Kemenag\Traits\ProvinceCityTrait;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Kemenag\Traits\SupportsTrait;
 
 class KemenagPrayerTime implements PrayerTime
 {
-    /**
-     * @throws GuzzleException
-     */
-    public function getProvinces(): array
-    {
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-        ]);
-
-        $response = $client->get('/jadwalshalat', [
-            'cookies' => $this->getCookies(),
-        ]);
-
-        $provinces = [];
-
-        (new Crawler($response->getBody()->getContents()))
-            ->filter('#search_prov option')
-            ->each(function (Crawler $node) use (&$provinces) {
-                if ($node->text() != 'PUSAT') {
-                    $provinces[] = [
-                        'value' => $node->attr('value'),
-                        'text'  => $node->text(),
-                    ];
-                }
-            });
-
-        return $provinces;
-    }
-
-    /**
-     * @throws GuzzleException
-     */
-    public function getCities(string $provinceId): array
-    {
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-        ]);
-
-        $response = $client->post('/ajax/getKabkoshalat', [
-            'cookies'     => $this->getCookies(),
-            'form_params' => [
-                'x' => $provinceId,
-            ],
-        ]);
-
-        $cities = [];
-
-        (new Crawler($response->getBody()->getContents()))
-            ->filter('option')
-            ->each(function (Crawler $node) use (&$cities) {
-                $cities[] = [
-                    'value' => $node->attr('value'),
-                    'text'  => $node->text(),
-                ];
-            });
-
-        return $cities;
-    }
+    use ProvinceCityTrait;
+    use SupportsTrait;
 
     /**
      * @throws GuzzleException
@@ -108,37 +51,5 @@ class KemenagPrayerTime implements PrayerTime
         });
 
         return $normalizedSchedules->toArray();
-    }
-
-    /**
-     * @throws GuzzleException
-     */
-    protected function getCookies(): CookieJar
-    {
-        $cookieJar = new CookieJar;
-
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-            'cookies'  => $cookieJar,
-        ]);
-
-        $client->get('jadwalshalat');
-
-        return $cookieJar;
-    }
-
-    public function getBaseUrl(): string
-    {
-        return config('prayertime.base_uri');
-    }
-
-    protected function normalizeDate(string $date): Carbon
-    {
-        return Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
-    }
-
-    protected function normalizeTime(string $time): Carbon
-    {
-        return Carbon::createFromFormat('H:i', $time);
     }
 }

@@ -8,8 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Jhonoryza\LaravelPrayertime\Models\City;
 use Jhonoryza\LaravelPrayertime\Models\Province;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime as PrayerTimeInterface;
-
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime as PrayerTimeInterface;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\text;

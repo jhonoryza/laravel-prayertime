@@ -1,35 +1,48 @@
 <?php
 
-namespace Jhonoryza\LaravelPrayertime\Support;
+namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits;
 
 use Jhonoryza\LaravelPrayertime\Models\City;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\CalculationPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\GeniustPrayerTime;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\AdditionSpecificDateTrait;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\AdditionSpecificYearTrait;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\ProvinceCityTrait;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\SupportsTrait;
 
-class ManualPrayerTime implements PrayerTime
+trait AdditionSpecificYearTrait
 {
-    use AdditionSpecificDateTrait;
-    use AdditionSpecificYearTrait;
-    use ProvinceCityTrait;
-    use SupportsTrait;
-
-    public function getBaseUrl(): string
+    public function getFromLongLatOnSpecificYear(float $latitude, float $longitude, int $year): array
     {
-        return '';
+        $timeZone = $this->getTimezone($latitude, $longitude);
+
+        $date    = strtotime($year . '-1-1');
+        $endDate = strtotime(($year + 1) . '-1-1');
+
+        $source = config('prayertime.manual_source');
+        if ($source == 'praytimes.org') {
+            return (new CalculationPrayerTime)->calculate(
+                $latitude,
+                $longitude,
+                $timeZone,
+                $date,
+                $endDate,
+                null,
+                'longlat'
+            );
+        } elseif ($source == 'geniusts/prayer-times') {
+            return (new GeniustPrayerTime)->calculate(
+                $latitude,
+                $longitude,
+                $timeZone,
+                $date,
+                $endDate,
+                null,
+                'longlat'
+            );
+        }
+
+        return [];
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function getPrayerTimes(string $provinceId, string $cityId, int $month, int $year): array
+    public function getFromCityIdOnSpecificYear(string $cityId, int $year): array
     {
-        unset($month);
-
         $city = City::query()->where('external_id', $cityId)->first();
         if (! $city instanceof City) {
             return [];
@@ -51,7 +64,7 @@ class ManualPrayerTime implements PrayerTime
                 $date,
                 $endDate,
                 $city,
-                'database'
+                'city'
             );
         } elseif ($source == 'geniusts/prayer-times') {
             return (new GeniustPrayerTime)->calculate(
@@ -61,7 +74,7 @@ class ManualPrayerTime implements PrayerTime
                 $date,
                 $endDate,
                 $city,
-                'database'
+                'city'
             );
         }
 

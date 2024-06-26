@@ -5,7 +5,7 @@ namespace Jhonoryza\LaravelPrayertime;
 use Illuminate\Support\ServiceProvider;
 use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerProvinceCity;
 use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerTimes;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\KemenagPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\ManualPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\MyQuranPrayerTime;

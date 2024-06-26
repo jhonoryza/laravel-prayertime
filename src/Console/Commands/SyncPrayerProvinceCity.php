@@ -5,7 +5,7 @@ namespace Jhonoryza\LaravelPrayertime\Console\Commands;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Jhonoryza\LaravelPrayertime\Models\Province;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
 
 class SyncPrayerProvinceCity extends Command
 {
