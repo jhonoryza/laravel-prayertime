@@ -5,6 +5,9 @@ namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\CalculationPrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\GeniustPrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\IslamicNetworkPrayerTime;
 
 trait SupportsTrait
 {
@@ -49,5 +52,54 @@ trait SupportsTrait
         $datetime = new DateTime('now', $time_zone);
 
         return $time_zone->getOffset($datetime) / 3600;
+    }
+
+    public function floatToDateTime(float $floatDate, string $timezone): DateTime
+    {
+        // Pisahkan bagian utuh dan bagian desimal
+        $integerPart = (int) $floatDate;
+        $decimalPart = $floatDate - $integerPart;
+
+        // Konversi bagian utuh menjadi objek DateTime
+        $dateTime = new DateTime("@$integerPart");
+        $dateTime->setTimezone(new DateTimeZone($timezone));
+
+        // Tambahkan bagian desimal sebagai mikrodetik
+        $microseconds = (int) ($decimalPart * 1000000);
+
+        return $dateTime->modify("+$microseconds microseconds");
+    }
+
+    public function floatToTimezoneString($offset)
+    {
+        $timezoneList = DateTimeZone::listIdentifiers();
+        foreach ($timezoneList as $timezone) {
+            $dateTimeZone   = new DateTimeZone($timezone);
+            $dateTime       = new DateTime('now', $dateTimeZone);
+            $timezoneOffset = $dateTimeZone->getOffset($dateTime) / 3600; // Konversi detik ke jam
+
+            // Jika offset cocok, kembalikan nama zona waktu
+            if ($timezoneOffset == $offset) {
+                return $timezone;
+            }
+        }
+
+        return 'UTC'; // Default jika tidak ada kecocokan
+    }
+
+    public function getService(): CalculationPrayerTime|GeniustPrayerTime|IslamicNetworkPrayerTime
+    {
+        $source  = config('prayertime.manual_source');
+        $service = match ($source) {
+            'praytimes.org'                => (new CalculationPrayerTime),
+            'geniusts/prayer-times'        => (new GeniustPrayerTime),
+            'islamic-network/prayer-times' => (new IslamicNetworkPrayerTime),
+            default                        => null,
+        };
+
+        if ($service == null) {
+            throw new \Exception('Service not found');
+        }
+        return $service;
     }
 }

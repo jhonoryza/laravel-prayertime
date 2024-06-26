@@ -3,8 +3,6 @@
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits;
 
 use Jhonoryza\LaravelPrayertime\Models\City;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\CalculationPrayerTime;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\GeniustPrayerTime;
 
 trait AdditionSpecificDateTrait
 {
@@ -15,28 +13,9 @@ trait AdditionSpecificDateTrait
         // $date format YYYY-MM-DD
         $date = strtotime($date);
 
-        $source = config('prayertime.manual_source');
-        if ($source == 'praytimes.org') {
-            return (new CalculationPrayerTime)->calculateForSingleDate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                null,
-                'longlat'
-            );
-        } elseif ($source == 'geniusts/prayer-times') {
-            return (new GeniustPrayerTime)->calculateForSingleDate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                null,
-                'longlat'
-            );
-        }
+        $service = $this->getService();
 
-        return [];
+        return $service->calculateForSingleDate($latitude, $longitude, $timeZone, $date, null, 'longlat');
     }
 
     public function getFromCityIdOnSpecificDate(string $cityId, string $date): array
@@ -53,27 +32,8 @@ trait AdditionSpecificDateTrait
         // $date format YYYY-MM-DD
         $date = strtotime($date);
 
-        $source = config('prayertime.manual_source');
-        if ($source == 'praytimes.org') {
-            return (new CalculationPrayerTime)->calculateForSingleDate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $city,
-                'city'
-            );
-        } elseif ($source == 'geniusts/prayer-times') {
-            return (new GeniustPrayerTime)->calculateForSingleDate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $city,
-                'city'
-            );
-        }
+        $service = $this->getService();
 
-        return [];
+        return $service->calculateForSingleDate($latitude, $longitude, $timeZone, $date, $city, 'city');
     }
 }

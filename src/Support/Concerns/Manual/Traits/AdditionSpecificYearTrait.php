@@ -3,8 +3,6 @@
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits;
 
 use Jhonoryza\LaravelPrayertime\Models\City;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\CalculationPrayerTime;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\GeniustPrayerTime;
 
 trait AdditionSpecificYearTrait
 {
@@ -15,30 +13,17 @@ trait AdditionSpecificYearTrait
         $date    = strtotime($year . '-1-1');
         $endDate = strtotime(($year + 1) . '-1-1');
 
-        $source = config('prayertime.manual_source');
-        if ($source == 'praytimes.org') {
-            return (new CalculationPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                null,
-                'longlat'
-            );
-        } elseif ($source == 'geniusts/prayer-times') {
-            return (new GeniustPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                null,
-                'longlat'
-            );
-        }
+        $service = $this->getService();
 
-        return [];
+        return $service->calculate(
+            $latitude,
+            $longitude,
+            $timeZone,
+            $date,
+            $endDate,
+            null,
+            'longlat'
+        );
     }
 
     public function getFromCityIdOnSpecificYear(string $cityId, int $year): array
@@ -55,29 +40,16 @@ trait AdditionSpecificYearTrait
         $date    = strtotime($year . '-1-1');
         $endDate = strtotime(($year + 1) . '-1-1');
 
-        $source = config('prayertime.manual_source');
-        if ($source == 'praytimes.org') {
-            return (new CalculationPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                $city,
-                'city'
-            );
-        } elseif ($source == 'geniusts/prayer-times') {
-            return (new GeniustPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                $city,
-                'city'
-            );
-        }
+        $service = $this->getService();
 
-        return [];
+        return $service->calculate(
+            $latitude,
+            $longitude,
+            $timeZone,
+            $date,
+            $endDate,
+            $city,
+            'city'
+        );
     }
 }

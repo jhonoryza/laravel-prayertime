@@ -4,8 +4,6 @@ namespace Jhonoryza\LaravelPrayertime\Support;
 
 use Jhonoryza\LaravelPrayertime\Models\City;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\CalculationPrayerTime;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\GeniustPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\AdditionSpecificDateTrait;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\AdditionSpecificYearTrait;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Manual\Traits\ProvinceCityTrait;
@@ -42,29 +40,16 @@ class ManualPrayerTime implements PrayerTime
         $date    = strtotime($year . '-1-1');
         $endDate = strtotime(($year + 1) . '-1-1');
 
-        $source = config('prayertime.manual_source');
-        if ($source == 'praytimes.org') {
-            return (new CalculationPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                $city,
-                'database'
-            );
-        } elseif ($source == 'geniusts/prayer-times') {
-            return (new GeniustPrayerTime)->calculate(
-                $latitude,
-                $longitude,
-                $timeZone,
-                $date,
-                $endDate,
-                $city,
-                'database'
-            );
-        }
+        $service = $this->getService();
 
-        return [];
+        return $service->calculate(
+            $latitude,
+            $longitude,
+            $timeZone,
+            $date,
+            $endDate,
+            $city,
+            'database'
+        );
     }
 }
