@@ -2,47 +2,16 @@
 
 namespace Jhonoryza\LaravelPrayertime\Support;
 
-use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\MyQuran\Traits\ProvinceCityTrait;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\MyQuran\Traits\SupportsTrait;
 
 class MyQuranPrayerTime implements PrayerTime
 {
-    public function getProvinces(): array
-    {
-        return [
-            [
-                'value' => 'all',
-                'text'  => 'Semua Provinsi',
-            ],
-        ];
-    }
-
-    /**
-     * @throws RequestException
-     */
-    public function getCities(string $provinceId): array
-    {
-        unset($provinceId);
-        $items = Http::timeout(10)
-            ->connectTimeout(10)
-            ->baseUrl($this->getBaseUrl())
-            ->acceptJson()
-            ->get('sholat/kota/semua')
-            ->throw()
-            ->json();
-
-        $cities = [];
-        foreach ($items['data'] ?? [] as $item) {
-            $cities[] = [
-                'value' => $item['id'],
-                'text'  => $item['lokasi'],
-            ];
-        }
-
-        return $cities;
-    }
+    use ProvinceCityTrait;
+    use SupportsTrait;
 
     /**
      * @throws RequestException
@@ -77,20 +46,5 @@ class MyQuranPrayerTime implements PrayerTime
         }
 
         return $prayerTimes;
-    }
-
-    protected function normalizeDate(string $date): Carbon
-    {
-        return Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
-    }
-
-    protected function normalizeTime(string $time): Carbon
-    {
-        return Carbon::createFromFormat('H:i', $time);
-    }
-
-    public function getBaseUrl(): string
-    {
-        return config('prayertime.base_uri');
     }
 }

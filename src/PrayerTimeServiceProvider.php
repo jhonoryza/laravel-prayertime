@@ -5,7 +5,7 @@ namespace Jhonoryza\LaravelPrayertime;
 use Illuminate\Support\ServiceProvider;
 use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerProvinceCity;
 use Jhonoryza\LaravelPrayertime\Console\Commands\SyncPrayerTimes;
-use Jhonoryza\LaravelPrayertime\Support\Concerns\PrayerTime;
+use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\KemenagPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\ManualPrayerTime;
 use Jhonoryza\LaravelPrayertime\Support\MyQuranPrayerTime;
@@ -28,15 +28,12 @@ class PrayerTimeServiceProvider extends ServiceProvider
 
         $source = config('prayertime.source');
         $this->app->bind(PrayerTime::class, function () use ($source) {
-            if ($source == 'kemenag') {
-                return new KemenagPrayerTime;
-            } elseif ($source == 'myquran.com') {
-                return new MyQuranPrayerTime;
-            } elseif ($source == 'manual calculation') {
-                return new ManualPrayerTime;
-            }
-
-            $class = config('prayertime.custom_prayer_time_class');
+            $class = match ($source) {
+                'kemenag'            => KemenagPrayerTime::class,
+                'myquran.com'        => MyQuranPrayerTime::class,
+                'manual calculation' => ManualPrayerTime::class,
+                default              => config('prayertime.custom_prayer_time_class'),
+            };
 
             return new $class;
         });

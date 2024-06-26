@@ -1,6 +1,6 @@
 <?php
 
-namespace Jhonoryza\LaravelPrayertime\Support\Concerns;
+namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Manual;
 
 //--------------------- Copyright Block ----------------------
 /*
