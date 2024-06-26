@@ -46,6 +46,41 @@ get prayer times from the source and save it to the database
 php artisan pray:sync-times
 ```
 
+## general usage
+
+```php
+public function getPrayerTimes(string $provinceId, string $cityId, int $month, int $year): array
+```
+
+example :
+
+```php
+<?php
+
+Route::get('/time', function (PrayerTime $prayer) {
+    $prayerTimes = $prayer->getPrayerTimes(
+        '',
+        '3204', // Kab Bandung external id
+        6,
+        2024
+    );
+    foreach ($prayerTimes as $index => $times) {
+        foreach ($times as $key => $prayerTime) {
+            if (in_array($key, ['city_external_id', 'prayer_at'])) {
+                continue;
+            }
+            $times[$key] = $prayerTime->format('H:i');
+        }
+
+        $prayerTimes[$index] = $times;
+    }
+
+    return response()->json([
+        'data' => $prayerTimes,
+    ]);
+});
+```
+
 ## manual calculation usage
 
 see [Manual Calculation](MANUAL_USAGE.md)

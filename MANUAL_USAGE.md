@@ -1,6 +1,8 @@
 ## Manual Calculation Usage
 
-get prayer times from specific latitude, longitude and year
+this function only available on source manual calculation
+
+### get prayer times from specific latitude, longitude and year
 
 ```php
 public function getFromLongLatOnSpecificYear(float $latitude, float $longitude, int $year): array
@@ -50,7 +52,7 @@ response sample :
 }
 ```
 
-get prayer times from specific latitude, longitude and date
+### get prayer times from specific latitude, longitude and date
 
 ```php
 public function getFromLongLatOnSpecificDate(float $latitude, float $longitude, string $date): array
@@ -95,7 +97,7 @@ response sample :
 }
 ```
 
-get prayer times from specific external city id and year
+### get prayer times from specific external city id and year
 
 ```php
 public function getFromCityIdOnSpecificYear(string $cityId, int $year): array
@@ -147,7 +149,7 @@ response sample :
 }
 ```
 
-get prayer times from specific external city id and date
+### get prayer times from specific external city id and date
 
 ```php
 public function getFromCityIdOnSpecificDate(string $cityId, string $date): array
