@@ -18,9 +18,11 @@ trait ProvinceCityTrait
 
     private function apiProvince(): array
     {
-        $data = Http::baseUrl($this->getBaseUrl())->get('apiv1/getShalatProv', [
-            'param_token' => config('prayertime.kemenag_api_key'),
-        ])->json();
+        $data = Http::baseUrl($this->getBaseUrl())
+            ->get('apiv1/getShalatProv', [
+                'param_token' => config('prayertime.kemenag_api_key'),
+            ])
+            ->json();
         $provinces = [];
         foreach ($data as $item) {
             $provinces[] = [
@@ -67,10 +69,12 @@ trait ProvinceCityTrait
 
     private function apiCity(string $provinceId): array
     {
-        $data = Http::baseUrl($this->getBaseUrl())->get('apiv1/getShalatKabko', [
-            'param_token' => config('prayertime.kemenag_api_key'),
-            'param_prov' => $provinceId,
-        ])->json();
+        $data = Http::baseUrl($this->getBaseUrl())
+            ->get('apiv1/getShalatKabko', [
+                'param_token' => config('prayertime.kemenag_api_key'),
+                'param_prov' => $provinceId,
+            ])
+            ->json();
         $cities = [];
         foreach ($data as $item) {
             $cities[] = [

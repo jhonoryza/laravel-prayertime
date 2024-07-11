@@ -19,6 +19,7 @@ return [
 
     /**
      * Kemenag source
+     * choose crawler if you don't have an api key
      * Supported: "crawler", "api"
      */
     'kemenag_source' => ENV('PRAYTIME_KEMENAG_SOURCE', 'api'),
