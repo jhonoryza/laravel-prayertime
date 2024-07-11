@@ -13,6 +13,22 @@ class MyQuranPrayerTime implements PrayerTime
     use ProvinceCityTrait;
     use SupportsTrait;
 
+    public function getFromLongLatOnSpecificYear($latitude, $longitude, $year)
+    {
+    }
+
+    public function getFromLongLatOnSpecificDate($latitude, $longitude, $date)
+    {
+    }
+
+    public function getFromCityIdOnSpecificYear($cityId, $year)
+    {
+    }
+
+    public function getFromCityIdOnSpecificDate($cityId, $date)
+    {
+    }
+
     /**
      * @throws RequestException
      */
@@ -33,15 +49,15 @@ class MyQuranPrayerTime implements PrayerTime
         foreach ($items['data']['jadwal'] as $item) {
             $prayerTimes[] = [
                 'city_external_id' => $cityId,
-                'prayer_at'        => $this->normalizeDate($item['date']),
-                'imsak'            => $this->normalizeTime($item['imsak']),
-                'subuh'            => $this->normalizeTime($item['subuh']),
-                'terbit'           => $this->normalizeTime($item['terbit']),
-                'dhuha'            => $this->normalizeTime($item['dhuha']),
-                'dzuhur'           => $this->normalizeTime($item['dzuhur']),
-                'ashar'            => $this->normalizeTime($item['ashar']),
-                'maghrib'          => $this->normalizeTime($item['maghrib']),
-                'isya'             => $this->normalizeTime($item['isya']),
+                'prayer_at' => $this->normalizeDate($item['date']),
+                'imsak' => $this->normalizeTime($item['imsak']),
+                'subuh' => $this->normalizeTime($item['subuh']),
+                'terbit' => $this->normalizeTime($item['terbit']),
+                'dhuha' => $this->normalizeTime($item['dhuha']),
+                'dzuhur' => $this->normalizeTime($item['dzuhur']),
+                'ashar' => $this->normalizeTime($item['ashar']),
+                'maghrib' => $this->normalizeTime($item['maghrib']),
+                'isya' => $this->normalizeTime($item['isya']),
             ];
         }
 
