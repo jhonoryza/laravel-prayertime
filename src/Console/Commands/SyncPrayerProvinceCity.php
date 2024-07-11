@@ -31,7 +31,7 @@ class SyncPrayerProvinceCity extends Command
      */
     public function handle(PrayerTime $prayerTime): int
     {
-        if (confirm('Want to truncate citytable?')) {
+        if (confirm('Want to truncate city table?')) {
             City::truncate();
         }
         if (confirm('Want to truncate province table?')) {
