@@ -52,7 +52,7 @@ class SyncPrayerProvinceCity extends Command
 
     protected function syncProvince(PrayerTime $prayerTime): void
     {
-        $json = file_get_contents(__DIR__.'/../../../public/json/manual-calc/provinces.json');
+        $json          = file_get_contents(__DIR__ . '/../../../public/json/manual-calc/provinces.json');
         $provinceItems = collect(json_decode($json, true));
 
         // get provinces
@@ -73,17 +73,17 @@ class SyncPrayerProvinceCity extends Command
                 ->firstOrCreate([
                     'external_id' => $province['value'],
                 ], [
-                    'name' => $province['text'],
-                    'latitude' => $province['latitude'] ?? $item['latitude'] ?? 0,
+                    'name'      => $province['text'],
+                    'latitude'  => $province['latitude']  ?? $item['latitude'] ?? 0,
                     'longitude' => $province['longitude'] ?? $item['longitude'] ?? 0,
                 ]);
-            $this->info('synced '.$province['text']);
+            $this->info('synced ' . $province['text']);
         }
     }
 
     protected function syncCity(PrayerTime $prayerTime): void
     {
-        $json = file_get_contents(__DIR__.'/../../../public/json/manual-calc/cities.json');
+        $json      = file_get_contents(__DIR__ . '/../../../public/json/manual-calc/cities.json');
         $cityItems = collect(json_decode($json, true));
 
         $this->info('Syncing City data...');
@@ -94,7 +94,7 @@ class SyncPrayerProvinceCity extends Command
             try {
                 $cities = $prayerTime->getCities($province->external_id);
             } catch (GuzzleException $e) {
-                $this->warn('skip '.$province->name);
+                $this->warn('skip ' . $province->name);
                 $this->error($e->getMessage());
 
                 continue;
@@ -107,11 +107,11 @@ class SyncPrayerProvinceCity extends Command
                     ->firstOrCreate([
                         'external_id' => $city['value'],
                     ], [
-                        'name' => $city['text'],
-                        'latitude' => $city['latitude'] ?? $item['latitude'] ?? 0,
+                        'name'      => $city['text'],
+                        'latitude'  => $city['latitude']  ?? $item['latitude'] ?? 0,
                         'longitude' => $city['longitude'] ?? $item['longitude'] ?? 0,
                     ]);
-                $this->info('synced '.$city['text']);
+                $this->info('synced ' . $city['text']);
             }
         }
     }

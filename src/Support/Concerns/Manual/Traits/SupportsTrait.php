@@ -100,6 +100,7 @@ trait SupportsTrait
         if ($service == null) {
             throw new \Exception('Service not found');
         }
+
         return $service;
     }
 }

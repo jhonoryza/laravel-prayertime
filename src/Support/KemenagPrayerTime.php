@@ -46,15 +46,15 @@ class KemenagPrayerTime implements PrayerTime
         collect($response['data'])->each(function (array $schedule, string $date) use ($cityId, $normalizedSchedules) {
             $normalizedSchedules->add([
                 'city_external_id' => $cityId,
-                'prayer_at' => $this->normalizeDate($date),
-                'imsak' => $this->normalizeTime($schedule['imsak']),
-                'subuh' => $this->normalizeTime($schedule['subuh']),
-                'terbit' => $this->normalizeTime($schedule['terbit']),
-                'dhuha' => $this->normalizeTime($schedule['dhuha']),
-                'dzuhur' => $this->normalizeTime($schedule['dzuhur']),
-                'ashar' => $this->normalizeTime($schedule['ashar']),
-                'maghrib' => $this->normalizeTime($schedule['maghrib']),
-                'isya' => $this->normalizeTime($schedule['isya']),
+                'prayer_at'        => $this->normalizeDate($date),
+                'imsak'            => $this->normalizeTime($schedule['imsak']),
+                'subuh'            => $this->normalizeTime($schedule['subuh']),
+                'terbit'           => $this->normalizeTime($schedule['terbit']),
+                'dhuha'            => $this->normalizeTime($schedule['dhuha']),
+                'dzuhur'           => $this->normalizeTime($schedule['dzuhur']),
+                'ashar'            => $this->normalizeTime($schedule['ashar']),
+                'maghrib'          => $this->normalizeTime($schedule['maghrib']),
+                'isya'             => $this->normalizeTime($schedule['isya']),
             ]);
         });
 
@@ -67,10 +67,10 @@ class KemenagPrayerTime implements PrayerTime
             ->asForm()
             ->post('apiv1/getShalatJadwal', [
                 'param_token' => config('prayertime.kemenag_api_key'),
-                'param_prov' => $provinceId,
+                'param_prov'  => $provinceId,
                 'param_kabko' => $cityId,
-                'param_bln' => $month,
-                'param_thn' => $year,
+                'param_bln'   => $month,
+                'param_thn'   => $year,
             ])->json();
     }
 
@@ -82,8 +82,8 @@ class KemenagPrayerTime implements PrayerTime
             ->asForm()
             ->withOptions(['cookies' => $cookies])
             ->post('/ajax/getShalatbln', [
-                'x' => $provinceId,
-                'y' => $cityId,
+                'x'   => $provinceId,
+                'y'   => $cityId,
                 'bln' => $month,
                 'thn' => $year,
             ])->json();

@@ -27,7 +27,7 @@ trait ProvinceCityTrait
         foreach ($data as $item) {
             $provinces[] = [
                 'value' => $item['provKode'],
-                'text' => $item['provNama'],
+                'text'  => $item['provNama'],
             ];
         }
 
@@ -36,7 +36,7 @@ trait ProvinceCityTrait
 
     private function crawlerProvince(): array
     {
-        $cookies = $this->getCookies();
+        $cookies  = $this->getCookies();
         $response = Http::baseUrl($this->getBaseUrl())
             ->withOptions([
                 'cookies' => $cookies,
@@ -51,7 +51,7 @@ trait ProvinceCityTrait
                 if ($node->text() != 'PUSAT') {
                     $provinces[] = [
                         'value' => $node->attr('value'),
-                        'text' => $node->text(),
+                        'text'  => $node->text(),
                     ];
                 }
             });
@@ -72,14 +72,14 @@ trait ProvinceCityTrait
         $data = Http::baseUrl($this->getBaseUrl())
             ->get('apiv1/getShalatKabko', [
                 'param_token' => config('prayertime.kemenag_api_key'),
-                'param_prov' => $provinceId,
+                'param_prov'  => $provinceId,
             ])
             ->json();
         $cities = [];
         foreach ($data as $item) {
             $cities[] = [
                 'value' => $item['kabkoKode'],
-                'text' => $item['kabkoNama'],
+                'text'  => $item['kabkoNama'],
             ];
         }
 
@@ -88,7 +88,7 @@ trait ProvinceCityTrait
 
     private function crawlerCity(string $provinceId): array
     {
-        $cookies = $this->getCookies();
+        $cookies  = $this->getCookies();
         $response = Http::baseUrl($this->getBaseUrl())
             ->withOptions([
                 'cookies' => $cookies,
@@ -104,7 +104,7 @@ trait ProvinceCityTrait
             ->each(function (Crawler $node) use (&$cities) {
                 $cities[] = [
                     'value' => $node->attr('value'),
-                    'text' => $node->text(),
+                    'text'  => $node->text(),
                 ];
             });
 
