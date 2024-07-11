@@ -13,6 +13,22 @@ class MyQuranPrayerTime implements PrayerTime
     use ProvinceCityTrait;
     use SupportsTrait;
 
+    public function getFromLongLatOnSpecificYear($latitude, $longitude, $year)
+    {
+    }
+
+    public function getFromLongLatOnSpecificDate($latitude, $longitude, $date)
+    {
+    }
+
+    public function getFromCityIdOnSpecificYear($cityId, $year)
+    {
+    }
+
+    public function getFromCityIdOnSpecificDate($cityId, $date)
+    {
+    }
+
     /**
      * @throws RequestException
      */

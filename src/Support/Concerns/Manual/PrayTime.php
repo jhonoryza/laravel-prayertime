@@ -333,7 +333,7 @@ class PrayTime
         $q = $this->fixangle(280.459 + 0.98564736 * $D);
         $L = $this->fixangle($q + 1.915 * $this->dsin($g) + 0.020 * $this->dsin(2 * $g));
 
-        $R = 1.00014 - 0.01671   * $this->dcos($g) - 0.00014 * $this->dcos(2 * $g);
+        $R = 1.00014 - 0.01671    * $this->dcos($g) - 0.00014 * $this->dcos(2 * $g);
         $e = 23.439  - 0.00000036 * $D;
 
         $d   = $this->darcsin($this->dsin($e) * $this->dsin($L));

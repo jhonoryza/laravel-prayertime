@@ -7,8 +7,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Jhonoryza\LaravelPrayertime\Models\City;
+use Jhonoryza\LaravelPrayertime\Models\Prayertime;
 use Jhonoryza\LaravelPrayertime\Models\Province;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime as PrayerTimeInterface;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\text;
@@ -67,7 +69,7 @@ class SyncPrayerTimes extends Command
             // upsert schedules to database for specific city
             if ($schedules->isNotEmpty()) {
                 DB::transaction(function () use ($schedules, $city) {
-                    DB::table('prayertimes')
+                    Prayertime::query()
                         ->upsert(
                             $schedules->toArray(),
                             ['city_external_id', 'prayer_at'],

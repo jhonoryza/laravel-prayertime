@@ -59,10 +59,10 @@ example :
 
 Route::get('/time', function (PrayerTime $prayer) {
     $prayerTimes = $prayer->getPrayerTimes(
-        '',
-        '3204', // Kab Bandung external id
-        6,
-        2024
+        provinceId: '', // Kab Bandung province external id for manual calculation or when using kemenag use this c20ad4d76fe97759aa27a0c99bff6710
+        cityId: '3204', // Kab Bandung external id for manual calculation or when using kemenag use this 0777d5c17d4066b82ab86dff8a46af6f
+        month: 6,
+        year: 2024
     );
     foreach ($prayerTimes as $index => $times) {
         foreach ($times as $key => $prayerTime) {

@@ -2,8 +2,8 @@
 
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Kemenag\Traits;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait ProvinceCityTrait
@@ -13,17 +13,39 @@ trait ProvinceCityTrait
      */
     public function getProvinces(): array
     {
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-        ]);
+        return config('prayertime.kemenag_source') == 'api' ? $this->apiProvince() : $this->crawlerProvince();
+    }
 
-        $response = $client->get('/jadwalshalat', [
-            'cookies' => $this->getCookies(),
-        ]);
+    private function apiProvince(): array
+    {
+        $data = Http::baseUrl($this->getBaseUrl())
+            ->get('apiv1/getShalatProv', [
+                'param_token' => config('prayertime.kemenag_api_key'),
+            ])
+            ->json();
+        $provinces = [];
+        foreach ($data as $item) {
+            $provinces[] = [
+                'value' => $item['provKode'],
+                'text'  => $item['provNama'],
+            ];
+        }
+
+        return $provinces;
+    }
+
+    private function crawlerProvince(): array
+    {
+        $cookies  = $this->getCookies();
+        $response = Http::baseUrl($this->getBaseUrl())
+            ->withOptions([
+                'cookies' => $cookies,
+            ])
+            ->get('/jadwalshalat');
 
         $provinces = [];
 
-        (new Crawler($response->getBody()->getContents()))
+        (new Crawler($response->body()))
             ->filter('#search_prov option')
             ->each(function (Crawler $node) use (&$provinces) {
                 if ($node->text() != 'PUSAT') {
@@ -42,20 +64,42 @@ trait ProvinceCityTrait
      */
     public function getCities(string $provinceId): array
     {
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-        ]);
+        return config('prayertime.kemenag_source') == 'api' ? $this->apiCity($provinceId) : $this->crawlerCity($provinceId);
+    }
 
-        $response = $client->post('/ajax/getKabkoshalat', [
-            'cookies'     => $this->getCookies(),
-            'form_params' => [
+    private function apiCity(string $provinceId): array
+    {
+        $data = Http::baseUrl($this->getBaseUrl())
+            ->get('apiv1/getShalatKabko', [
+                'param_token' => config('prayertime.kemenag_api_key'),
+                'param_prov'  => $provinceId,
+            ])
+            ->json();
+        $cities = [];
+        foreach ($data as $item) {
+            $cities[] = [
+                'value' => $item['kabkoKode'],
+                'text'  => $item['kabkoNama'],
+            ];
+        }
+
+        return $cities;
+    }
+
+    private function crawlerCity(string $provinceId): array
+    {
+        $cookies  = $this->getCookies();
+        $response = Http::baseUrl($this->getBaseUrl())
+            ->withOptions([
+                'cookies' => $cookies,
+            ])
+            ->asForm()
+            ->post('/ajax/getKabkoshalat', [
                 'x' => $provinceId,
-            ],
-        ]);
-
+            ]);
         $cities = [];
 
-        (new Crawler($response->getBody()->getContents()))
+        (new Crawler($response->body()))
             ->filter('option')
             ->each(function (Crawler $node) use (&$cities) {
                 $cities[] = [
