@@ -18,6 +18,18 @@ return [
     'manual_source' => ENV('PRAYTIME_MANUAL_SOURCE', 'geniusts/prayer-times'),
 
     /**
+     * Kemenag source
+     * Supported: "crawler", "api"
+     */
+    'kemenag_source' => ENV('PRAYTIME_KEMENAG_SOURCE', 'api'),
+
+    /**
+     * Kemenag api key
+     * required if kemenag_source is using api
+     */
+    'kemenag_api_key' => ENV('PRAYTIME_KEMENAG_API_KEY'),
+
+    /**
      * Base URI of prayertime
      *
      * kemenag: https://bimasislam.kemenag.go.id/

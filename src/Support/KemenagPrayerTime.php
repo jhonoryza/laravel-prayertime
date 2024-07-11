@@ -13,6 +13,26 @@ class KemenagPrayerTime implements PrayerTime
     use ProvinceCityTrait;
     use SupportsTrait;
 
+    public function getFromLongLatOnSpecificYear($latitude, $longitude, $year)
+    {
+        return [];
+    }
+
+    public function getFromLongLatOnSpecificDate($latitude, $longitude, $date)
+    {
+        return [];
+    }
+
+    public function getFromCityIdOnSpecificYear($cityId, $year)
+    {
+        return [];
+    }
+
+    public function getFromCityIdOnSpecificDate($cityId, $date)
+    {
+        return [];
+    }
+
     /**
      * @throws GuzzleException
      */
@@ -23,10 +43,10 @@ class KemenagPrayerTime implements PrayerTime
         ]);
 
         $response = $client->post('/ajax/getShalatbln', [
-            'cookies'     => $this->getCookies(),
+            'cookies' => $this->getCookies(),
             'form_params' => [
-                'x'   => $provinceId,
-                'y'   => $cityId,
+                'x' => $provinceId,
+                'y' => $cityId,
                 'bln' => $month,
                 'thn' => $year,
             ],
@@ -38,15 +58,15 @@ class KemenagPrayerTime implements PrayerTime
         collect($schedules['data'])->each(function (array $schedule, string $date) use ($cityId, $normalizedSchedules) {
             $normalizedSchedules->add([
                 'city_external_id' => $cityId,
-                'prayer_at'        => $this->normalizeDate($date),
-                'imsak'            => $this->normalizeTime($schedule['imsak']),
-                'subuh'            => $this->normalizeTime($schedule['subuh']),
-                'terbit'           => $this->normalizeTime($schedule['terbit']),
-                'dhuha'            => $this->normalizeTime($schedule['dhuha']),
-                'dzuhur'           => $this->normalizeTime($schedule['dzuhur']),
-                'ashar'            => $this->normalizeTime($schedule['ashar']),
-                'maghrib'          => $this->normalizeTime($schedule['maghrib']),
-                'isya'             => $this->normalizeTime($schedule['isya']),
+                'prayer_at' => $this->normalizeDate($date),
+                'imsak' => $this->normalizeTime($schedule['imsak']),
+                'subuh' => $this->normalizeTime($schedule['subuh']),
+                'terbit' => $this->normalizeTime($schedule['terbit']),
+                'dhuha' => $this->normalizeTime($schedule['dhuha']),
+                'dzuhur' => $this->normalizeTime($schedule['dzuhur']),
+                'ashar' => $this->normalizeTime($schedule['ashar']),
+                'maghrib' => $this->normalizeTime($schedule['maghrib']),
+                'isya' => $this->normalizeTime($schedule['isya']),
             ]);
         });
 

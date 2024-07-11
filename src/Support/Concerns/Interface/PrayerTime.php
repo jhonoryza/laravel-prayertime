@@ -3,10 +3,10 @@
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Interface;
 
 /**
- * @method getFromLongLatOnSpecificYear(float $latitude, float $longitude, int $year)
- * @method getFromLongLatOnSpecificDate(float $latitude, float $longitude, string $date)
- * @method getFromCityIdOnSpecificYear(string $cityId, int $year)
- * @method getFromCityIdOnSpecificDate(string $cityId, string $date)
+ * @method array getFromLongLatOnSpecificYear(float $latitude, float $longitude, int $year)
+ * @method array getFromLongLatOnSpecificDate(float $latitude, float $longitude, string $date)
+ * @method array getFromCityIdOnSpecificYear(string $cityId, int $year)
+ * @method array getFromCityIdOnSpecificDate(string $cityId, string $date)
  */
 interface PrayerTime
 {

@@ -3,9 +3,9 @@
 namespace Jhonoryza\LaravelPrayertime\Support\Concerns\Kemenag\Traits;
 
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
 
 trait SupportsTrait
 {
@@ -16,12 +16,15 @@ trait SupportsTrait
     {
         $cookieJar = new CookieJar;
 
-        $client = new Client([
-            'base_uri' => $this->getBaseUrl(),
-            'cookies'  => $cookieJar,
-        ]);
-
-        $client->get('jadwalshalat');
+        $cookies = Http::baseUrl($this->getBaseUrl())
+            ->withOptions([
+                'cookies' => $cookieJar,
+            ], 'bimasislam.kemenag.go.id')
+            ->get('jadwalshalat')
+            ->cookies();
+        foreach ($cookies as $cookie) {
+            $cookieJar->setCookie($cookie);
+        }
 
         return $cookieJar;
     }

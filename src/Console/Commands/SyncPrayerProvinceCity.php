@@ -4,8 +4,11 @@ namespace Jhonoryza\LaravelPrayertime\Console\Commands;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Jhonoryza\LaravelPrayertime\Models\City;
 use Jhonoryza\LaravelPrayertime\Models\Province;
 use Jhonoryza\LaravelPrayertime\Support\Concerns\Interface\PrayerTime;
+
+use function Laravel\Prompts\confirm;
 
 class SyncPrayerProvinceCity extends Command
 {
@@ -28,9 +31,20 @@ class SyncPrayerProvinceCity extends Command
      */
     public function handle(PrayerTime $prayerTime): int
     {
+        if (confirm('Want to truncate citytable?')) {
+            City::truncate();
+        }
+        if (confirm('Want to truncate province table?')) {
+            Province::truncate();
+        }
         $this->info('Start');
-        $this->syncProvince($prayerTime);
-        $this->syncCity($prayerTime);
+        if (confirm('Want to sync province data?')) {
+            $this->syncProvince($prayerTime);
+
+        }
+        if (confirm('Want to sync city data?')) {
+            $this->syncCity($prayerTime);
+        }
         $this->info('Done');
 
         return 1;
@@ -38,6 +52,9 @@ class SyncPrayerProvinceCity extends Command
 
     protected function syncProvince(PrayerTime $prayerTime): void
     {
+        $json = file_get_contents(__DIR__.'/../../../public/json/manual-calc/provinces.json');
+        $provinceItems = collect(json_decode($json, true));
+
         // get provinces
         try {
             $provinces = $prayerTime->getProvinces();
@@ -51,20 +68,24 @@ class SyncPrayerProvinceCity extends Command
         $this->info('Syncing Province data...');
 
         foreach ($provinces as $province) {
+            $item = $provinceItems->firstWhere('name', $province['text']);
             Province::query()
                 ->firstOrCreate([
                     'external_id' => $province['value'],
                 ], [
-                    'name'      => $province['text'],
-                    'latitude'  => $province['latitude']  ?? 0,
-                    'longitude' => $province['longitude'] ?? 0,
+                    'name' => $province['text'],
+                    'latitude' => $province['latitude'] ?? $item['latitude'] ?? 0,
+                    'longitude' => $province['longitude'] ?? $item['longitude'] ?? 0,
                 ]);
-            $this->info('synced ' . $province['text']);
+            $this->info('synced '.$province['text']);
         }
     }
 
     protected function syncCity(PrayerTime $prayerTime): void
     {
+        $json = file_get_contents(__DIR__.'/../../../public/json/manual-calc/cities.json');
+        $cityItems = collect(json_decode($json, true));
+
         $this->info('Syncing City data...');
         $provinces = Province::query()->get();
         foreach ($provinces as $province) {
@@ -73,7 +94,7 @@ class SyncPrayerProvinceCity extends Command
             try {
                 $cities = $prayerTime->getCities($province->external_id);
             } catch (GuzzleException $e) {
-                $this->warn('skip ' . $province->name);
+                $this->warn('skip '.$province->name);
                 $this->error($e->getMessage());
 
                 continue;
@@ -81,15 +102,16 @@ class SyncPrayerProvinceCity extends Command
 
             // generate cities from province
             foreach ($cities as $city) {
+                $item = $cityItems->firstWhere('name', str_replace('KAB.', 'KABUPATEN', $city['text']));
                 $province->cities()
                     ->firstOrCreate([
                         'external_id' => $city['value'],
                     ], [
-                        'name'      => $city['text'],
-                        'latitude'  => $city['latitude']  ?? 0,
-                        'longitude' => $city['longitude'] ?? 0,
+                        'name' => $city['text'],
+                        'latitude' => $city['latitude'] ?? $item['latitude'] ?? 0,
+                        'longitude' => $city['longitude'] ?? $item['longitude'] ?? 0,
                     ]);
-                $this->info('synced ' . $city['text']);
+                $this->info('synced '.$city['text']);
             }
         }
     }
