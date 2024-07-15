@@ -22,7 +22,7 @@ class SyncPrayerTimes extends Command
      *
      * @var string
      */
-    protected $signature = 'pray:sync-times';
+    protected $signature = 'pray:sync-times {--Y|year=2024}';
 
     /**
      * The console command description.
@@ -37,10 +37,12 @@ class SyncPrayerTimes extends Command
     public function handle(PrayerTimeInterface $prayerTime): int
     {
         [
-            'year'         => $year,
+            'year' => $year,
             'provinceName' => $provinceName,
-            'cityName'     => $cityName,
+            'cityName' => $cityName,
         ] = $this->getPreferences();
+
+        $this->info('Start sync year '.$year);
 
         $cities = City::query()
             ->when(
@@ -75,7 +77,7 @@ class SyncPrayerTimes extends Command
                             ['city_external_id', 'prayer_at'],
                             ['imsak', 'subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya']
                         );
-                    $this->info('generated data for ' . $city->name);
+                    $this->info('generated data for '.$city->name);
                 });
             }
 
@@ -96,7 +98,7 @@ class SyncPrayerTimes extends Command
                 );
 
                 if (empty($schedules)) {
-                    $this->warn('No schedules found for city ' . $city->name . ' month ' . $month);
+                    $this->warn('No schedules found for city '.$city->name.' month '.$month);
 
                     continue;
                 }
@@ -105,9 +107,9 @@ class SyncPrayerTimes extends Command
                     $normalizedSchedules->add($schedule);
                 }
 
-                $this->info('collect data for ' . $city->name . ' month ' . $month);
+                $this->info('collect data for '.$city->name.' month '.$month);
             } catch (GuzzleException $e) {
-                $this->warn('skipping city ' . $city->name . ' month ' . $month);
+                $this->warn('skipping city '.$city->name.' month '.$month);
                 $this->error($e->getMessage());
 
                 continue;
@@ -121,7 +123,7 @@ class SyncPrayerTimes extends Command
     {
         $year = text(
             label: 'What year to sync?',
-            default: 2024,
+            default: $this->option('year'),
             required: true
         );
 
@@ -135,13 +137,13 @@ class SyncPrayerTimes extends Command
             : search(
                 label: 'Choose province',
                 options: fn ($search) => Province::query()
-                    ->where('name', 'like', '%' . $search . '%')
+                    ->where('name', 'like', '%'.$search.'%')
                     ->pluck('name')
                     ->toArray(),
             );
 
         if ($provinceName != null) {
-            $this->info('Province selected: ' . $provinceName);
+            $this->info('Province selected: '.$provinceName);
         }
 
         $chooseCity = confirm(
@@ -158,19 +160,19 @@ class SyncPrayerTimes extends Command
                         $provinceName !== null,
                         fn ($query) => $query->whereRelation('province', 'name', $provinceName),
                     )
-                    ->where('name', 'like', '%' . $search . '%')
+                    ->where('name', 'like', '%'.$search.'%')
                     ->pluck('name')
                     ->toArray(),
             );
 
         if ($cityName != null) {
-            $this->info('City selected: ' . $cityName);
+            $this->info('City selected: '.$cityName);
         }
 
         return [
-            'year'         => $year,
+            'year' => $year,
             'provinceName' => $provinceName,
-            'cityName'     => $cityName,
+            'cityName' => $cityName,
         ];
     }
 }
