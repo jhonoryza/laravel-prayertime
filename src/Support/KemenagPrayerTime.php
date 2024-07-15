@@ -64,9 +64,8 @@ class KemenagPrayerTime implements PrayerTime
     private function apiJadwalShalat(string $provinceId, string $cityId, int $month, int $year): array
     {
         return Http::baseUrl($this->getBaseUrl())
-            ->retry(5, function (int $attempt) {
-                return $attempt * 1000;
-            })
+            ->retry(5)
+            ->timeout(15)
             ->asForm()
             ->post('apiv1/getShalatJadwal', [
                 'param_token' => config('prayertime.kemenag_api_key'),

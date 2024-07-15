@@ -19,9 +19,8 @@ trait ProvinceCityTrait
     private function apiProvince(): array
     {
         $data = Http::baseUrl($this->getBaseUrl())
-            ->retry(5, function (int $attempt) {
-                return $attempt * 1000;
-            })
+            ->retry(5)
+            ->timeout(15)
             ->get('apiv1/getShalatProv', [
                 'param_token' => config('prayertime.kemenag_api_key'),
             ])
@@ -73,9 +72,8 @@ trait ProvinceCityTrait
     private function apiCity(string $provinceId): array
     {
         $data = Http::baseUrl($this->getBaseUrl())
-            ->retry(5, function (int $attempt) {
-                return $attempt * 1000;
-            })
+            ->retry(5)
+            ->timeout(15)
             ->get('apiv1/getShalatKabko', [
                 'param_token' => config('prayertime.kemenag_api_key'),
                 'param_prov' => $provinceId,
