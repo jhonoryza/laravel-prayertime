@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6f5f292f6c14fd7bd10950527345ae0",
+    "content-hash": "b06ea2fefc76ac40010a5eb835bfee0f",
     "packages": [
         {
             "name": "brick/math",
@@ -583,29 +583,29 @@
         },
         {
             "name": "geniusts/prayer-times",
-            "version": "1.0.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/GeniusTS/prayer-times.git",
-                "reference": "79fda6eb5e5fa6736f3a3449aa18726111398efc"
+                "url": "https://github.com/jhonoryza/geniusts-prayer-times.git",
+                "reference": "57432406b63c7378c224a565c67080d2f4d3c316"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeniusTS/prayer-times/zipball/79fda6eb5e5fa6736f3a3449aa18726111398efc",
-                "reference": "79fda6eb5e5fa6736f3a3449aa18726111398efc",
+                "url": "https://api.github.com/repos/jhonoryza/geniusts-prayer-times/zipball/57432406b63c7378c224a565c67080d2f4d3c316",
+                "reference": "57432406b63c7378c224a565c67080d2f4d3c316",
                 "shasum": ""
             },
             "require": {
-                "nesbot/carbon": "^1.22|^2.0.0",
+                "nesbot/carbon": "^1.22|^2.0.0|^3.0.0",
                 "php": ">=7"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "GeniusTS\\PrayerTimes\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -617,10 +617,9 @@
             ],
             "description": "A PHP package to calculate prayer times",
             "support": {
-                "issues": "https://github.com/GeniusTS/prayer-times/issues",
-                "source": "https://github.com/GeniusTS/prayer-times/tree/1.0.5"
+                "source": "https://github.com/jhonoryza/geniusts-prayer-times/tree/master"
             },
-            "time": "2019-09-04T18:29:42+00:00"
+            "time": "2025-07-29T04:45:04+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -8761,7 +8760,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "geniusts/prayer-times": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

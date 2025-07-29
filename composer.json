@@ -2,7 +2,6 @@
     "name": "jhonoryza/laravel-prayertime",
     "type": "library",
     "license": "MIT",
-    "version": "1.1.2",
     "autoload": {
         "psr-4": {
             "Jhonoryza\\LaravelPrayertime\\": "src/"
@@ -21,13 +20,19 @@
             "email": "jardik.oryza@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/jhonoryza/geniusts-prayer-times"
+        }
+    ],
     "minimum-stability": "stable",
     "require": {
         "php": "^8.2",
         "symfony/dom-crawler": "^7.0",
         "illuminate/support": "^10.0|^11.0|^12.0",
         "guzzlehttp/guzzle": "^7.8",
-        "geniusts/prayer-times": "^1.0",
+        "geniusts/prayer-times": "dev-master",
         "islamic-network/prayer-times": "^1.0"
     },
     "require-dev": {
