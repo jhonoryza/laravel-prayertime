@@ -6,7 +6,7 @@ trait ProvinceCityTrait
 {
     public function getProvinces(): array
     {
-        $json  = file_get_contents(__DIR__ . '/../../public/json/manual-calc/provinces.json');
+        $json  = file_get_contents(__DIR__ . '/../../../../../public/json/manual-calc/provinces.json');
         $items = json_decode($json, true);
 
         $provinces = [];
@@ -24,7 +24,7 @@ trait ProvinceCityTrait
 
     public function getCities(string $provinceId): array
     {
-        $json  = file_get_contents(__DIR__ . '/../../public/json/manual-calc/cities.json');
+        $json  = file_get_contents(__DIR__ . '/../../../../../public/json/manual-calc/cities.json');
         $items = json_decode($json, true);
 
         $cities = [];
